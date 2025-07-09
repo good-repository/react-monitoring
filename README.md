@@ -19,7 +19,6 @@ A reusable React Error Boundary component for React applications. Use as a wrapp
 
 ## Installation
 
-npm install react-monitoring
 
 ```sh
 npm install react-monitoring
