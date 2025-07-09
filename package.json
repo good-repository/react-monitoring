@@ -1,0 +1,27 @@
+{
+  "name": "react-monitoring",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"No tests yet\""
+  },
+  "peerDependencies": {
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.23",
+    "typescript": "^5.8.3"
+  },
+  "license": "MIT",
+  "description": "Reusable React Error Boundary as HOC and Wrapper for monitoring and error handling.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/react-monitoring.git"
+  }
+}
