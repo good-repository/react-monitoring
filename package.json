@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "echo \"No tests yet\""
+    "test": "echo \"No tests yet\"",
+    "release": "npm run build && npm version patch && npm publish --access public"
   },
   "peerDependencies": {
     "react": "^19.1.0"
@@ -22,6 +23,10 @@
   "description": "Reusable React Error Boundary as HOC and Wrapper for monitoring and error handling.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/react-monitoring.git"
-  }
+    "url": "git+https://github.com/good-repository/react-monitoring.git"
+  },
+  "bugs": {
+    "url": "https://github.com/good-repository/react-monitoring/issues"
+  },
+  "homepage": "https://github.com/good-repository/react-monitoring#readme"
 }

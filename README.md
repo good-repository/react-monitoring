@@ -2,7 +2,14 @@
 # react-monitoring
 
 
+![npm](https://img.shields.io/npm/v/react-monitoring?style=flat-square)
+[![GitHub](https://img.shields.io/badge/github-repo-blue?logo=github&style=flat-square)](https://github.com/good-repository/react-monitoring)
+
+
 A reusable React Error Boundary component for React applications. Use as a wrapper or as a higher-order component (decorator).
+
+**GitHub:** [good-repository/react-monitoring](https://github.com/good-repository/react-monitoring)
+**npm:** [react-monitoring](https://www.npmjs.com/package/react-monitoring)
 
 ## Features
 - Use as a wrapper component
@@ -12,8 +19,9 @@ A reusable React Error Boundary component for React applications. Use as a wrapp
 
 ## Installation
 
-npm install react-error-boundary-library
-```
+npm install react-monitoring
+
+```sh
 npm install react-monitoring
 ```
 
