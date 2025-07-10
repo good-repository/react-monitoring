@@ -16,17 +16,6 @@
 
 ---
 
-## Features
-
-- Plug-and-play logger interface (`Logger`, `LogEntry`)
-- Use with Datadog, Sentry, or your own backend
-- Log errors from React, API calls, or anywhere in your app
-- Works with React, Redux Sagas, microfrontends, and more
-- No global singletons: inject logger per usage
-- Add custom context (user, environment, microfrontend info)
-
----
-
 ## Installation
 
 ```sh
@@ -35,25 +24,19 @@ npm install react-monitoring
 
 ---
 
-## Quick Start
+## Usage: Step by Step
 
-### 1. Logging API (Agnostic)
+### 1. Create a Logger (Datadog Example)
 
 ```ts
-import { Logger, LogEntry } from 'react-monitoring';
+import { DatadogLogger } from 'react-monitoring/dist/datadogLogger';
+const logger = new DatadogLogger('YOUR_DATADOG_API_KEY');
+```
 
-const myLogger: Logger = {
-  log(entry: LogEntry) {
-    // Send to your backend, Datadog, Sentry, etc.
-    fetch('https://my-api.com/log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(entry),
-    });
-  }
-};
+### 2. Log Any Event
 
-myLogger.log({
+```ts
+logger.log({
   level: 'error',
   message: 'Something went wrong',
   error: new Error('Oops'),
@@ -62,11 +45,11 @@ myLogger.log({
 });
 ```
 
-### 2. API Call Logging (fetch)
+### 3. Log API Calls (fetch)
 
 ```ts
 import { createLoggedFetch } from 'react-monitoring';
-const myFetch = createLoggedFetch(myLogger);
+const myFetch = createLoggedFetch(logger);
 
 const response = await myFetch('/api/data');
 if (!response.ok) {
@@ -74,7 +57,7 @@ if (!response.ok) {
 }
 ```
 
-### 3. React Error Boundary
+### 4. Use ErrorBoundary in React
 
 ```tsx
 import { ErrorBoundary } from 'react-monitoring';
@@ -83,7 +66,7 @@ export default function App() {
   return (
     <ErrorBoundary
       fallback={<div>Custom error message</div>}
-      logger={myLogger}
+      logger={logger}
       onError={(error, info, logger) => {
         logger.log({
           level: 'error',

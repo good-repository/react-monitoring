@@ -28,15 +28,23 @@ export class DatadogLogger implements Logger {
       error: entry.error ? (entry.error instanceof Error ? entry.error.stack : entry.error) : undefined,
       context: entry.context,
       timestamp: entry.timestamp || new Date().toISOString(),
-      // Add more fields as needed
     });
-    await fetch(this.url + `?dd-api-key=${this.apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-    });
+    try {
+      const res = await fetch(this.url + `?dd-api-key=${this.apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body,
+      });
+      if (!res.ok) {
+        // Optionally: fallback to console or queue for retry
+        // console.error('Datadog log failed', res.status, await res.text());
+      }
+    } catch (err) {
+      // Optionally: fallback to console or queue for retry
+      // console.error('Datadog log network error', err);
+    }
   }
 }
 
