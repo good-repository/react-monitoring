@@ -1,8 +1,10 @@
 import React from 'react';
+import { defaultLogger, Logger, LogEntry, LogLevel } from './logging';
 
 export interface ErrorBoundaryProps {
   fallback?: React.ReactNode;
-  onError?: (error: Error, info: { componentStack: string }) => void;
+  onError?: (error: Error, info: { componentStack: string }, logger: Logger) => void;
+  logger?: Logger;
   children: React.ReactNode;
 }
 
@@ -24,8 +26,18 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({ error, info: { componentStack: info.componentStack ?? '' } });
+    const logger = this.props.logger || defaultLogger;
+    // Log the error using the logging structure
+    const entry: LogEntry = {
+      level: LogLevel.ERROR,
+      message: 'ErrorBoundary caught an error',
+      error,
+      context: { componentStack: info.componentStack },
+      tags: ['react', 'error-boundary'],
+    };
+    logger.log(entry);
     if (this.props.onError) {
-      this.props.onError(error, { componentStack: info.componentStack ?? '' });
+      this.props.onError(error, { componentStack: info.componentStack ?? '' }, logger);
     }
   }
 
