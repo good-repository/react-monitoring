@@ -2,17 +2,16 @@
 
 # react-monitoring
 
-> **Agnostic Frontend Monitoring & Logging Toolkit**
+> **React Error Monitoring & Logging Toolkit**
 
 ![npm](https://img.shields.io/npm/v/react-monitoring?style=flat-square)
 [![GitHub](https://img.shields.io/badge/github-repo-blue?logo=github&style=flat-square)](https://github.com/good-repository/react-monitoring)
 
-`react-monitoring` is a flexible, framework-agnostic toolkit for frontend error monitoring and logging. It provides:
+`react-monitoring` is a flexible toolkit for error monitoring and logging in React applications. It provides:
 
 - **Agnostic logging structure** for any backend (Datadog, Sentry, custom API, etc.)
 - **React Error Boundary** and HOC for UI error capture
 - **API call logging** (fetch, saga, axios, etc.)
-- **Global error handlers** for white screens and unhandled promise rejections
 - **Microfrontend-ready**: no globals, logger injection everywhere
 
 ---
@@ -21,7 +20,7 @@
 
 - Plug-and-play logger interface (`Logger`, `LogEntry`)
 - Use with Datadog, Sentry, or your own backend
-- Log errors from React, API calls, or anywhere
+- Log errors from React, API calls, or anywhere in your app
 - Works with React, Redux Sagas, microfrontends, and more
 - No global singletons: inject logger per usage
 - Add custom context (user, environment, microfrontend info)
@@ -100,13 +99,6 @@ export default function App() {
 }
 ```
 
-### 4. Global Error Handlers (White Screens, Unhandled Promises)
-
-```ts
-import { initGlobalErrorHandlers } from 'react-monitoring';
-initGlobalErrorHandlers(myLogger);
-```
-
 ---
 
 ## API Reference
@@ -148,12 +140,6 @@ withErrorBoundary(Component, errorBoundaryProps)
 ```
 - `Component`: The component to wrap
 - `errorBoundaryProps`: Props for the error boundary (except `children`)
-
-### initGlobalErrorHandlers
-```ts
-initGlobalErrorHandlers(logger: Logger): void
-```
-- Sets up global error and unhandled promise rejection logging using the provided logger
 
 ---
 
