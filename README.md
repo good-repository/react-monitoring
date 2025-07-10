@@ -25,13 +25,46 @@ npm install react-monitoring
 ---
 
 
+
 ## Configuration
 
-### 1. Create a Logger (Datadog Example)
+### 1. Create a Logger
 
+#### Datadog Example
 ```ts
 import { DatadogLogger } from 'react-monitoring/dist/datadogLogger';
 const logger = new DatadogLogger('YOUR_DATADOG_API_KEY');
+```
+
+#### Sentry Example
+```ts
+import * as Sentry from '@sentry/browser';
+import { Logger, LogEntry } from 'react-monitoring';
+
+export const logger: Logger = {
+  log(entry: LogEntry) {
+    Sentry.captureException(entry.error || entry.message, {
+      level: entry.level,
+      extra: entry.context,
+      tags: entry.tags?.reduce((acc, tag) => ({ ...acc, [tag]: true }), {}),
+    });
+  }
+};
+```
+
+#### Custom API Example
+```ts
+import { Logger, LogEntry } from 'react-monitoring';
+
+export const logger: Logger = {
+  log(entry: LogEntry) {
+    fetch('https://my-logging-api.com/log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+    });
+  }
+};
 ```
 
 ---
