@@ -108,6 +108,13 @@ export default function App() {
 }
 ```
 
+### withErrorBoundary
+```ts
+withErrorBoundary(Component, errorBoundaryProps)
+```
+- `Component`: The component to wrap
+- `errorBoundaryProps`: Props for the error boundary (except `children`)
+
 ---
 
 ## API HTTP Request Logging
@@ -147,11 +154,6 @@ type LogEntry = {
 };
 ```
 
-### createLoggedFetch
-```ts
-function createLoggedFetch(logger: Logger): (input: RequestInfo, init?: RequestInit) => Promise<Response>
-```
-
 ### ErrorBoundary
 Props:
 - `fallback` (ReactNode): Custom fallback UI
@@ -159,14 +161,7 @@ Props:
 - `logger` (Logger): Logger instance to use
 - `children` (ReactNode): Child components
 
-### withErrorBoundary
-```ts
-withErrorBoundary(Component, errorBoundaryProps)
-```
-- `Component`: The component to wrap
-- `errorBoundaryProps`: Props for the error boundary (except `children`)
 
----
 
 ## Microfrontend & Advanced Usage
 
