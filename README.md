@@ -24,7 +24,8 @@ npm install react-monitoring
 
 ---
 
-## Usage: Step by Step
+
+## Configuration
 
 ### 1. Create a Logger (Datadog Example)
 
@@ -33,7 +34,11 @@ import { DatadogLogger } from 'react-monitoring/dist/datadogLogger';
 const logger = new DatadogLogger('YOUR_DATADOG_API_KEY');
 ```
 
-### 2. Log Any Event
+---
+
+## Error Boundary & Component Logging
+
+### Log Any Event (from a component, saga, etc.)
 
 ```ts
 logger.log({
@@ -45,19 +50,7 @@ logger.log({
 });
 ```
 
-### 3. Log API Calls (fetch)
-
-```ts
-import { createLoggedFetch } from 'react-monitoring';
-const myFetch = createLoggedFetch(logger);
-
-const response = await myFetch('/api/data');
-if (!response.ok) {
-  // handle error
-}
-```
-
-### 4. Use ErrorBoundary in React
+### Use ErrorBoundary in React
 
 ```tsx
 import { ErrorBoundary } from 'react-monitoring';
@@ -79,6 +72,22 @@ export default function App() {
       <MyComponent />
     </ErrorBoundary>
   );
+}
+```
+
+---
+
+## API HTTP Request Logging
+
+### Log API Calls (fetch)
+
+```ts
+import { createLoggedFetch } from 'react-monitoring';
+const myFetch = createLoggedFetch(logger);
+
+const response = await myFetch('/api/data');
+if (!response.ok) {
+  // handle error
 }
 ```
 

@@ -47,10 +47,3 @@ export class DatadogLogger implements Logger {
     }
   }
 }
-
-/**
- * Example usage:
- * import { DatadogLogger } from './datadogLogger';
- * const logger = new DatadogLogger('YOUR_API_KEY');
- * logger.log({ level: 'error', message: 'Test', ... });
- */
