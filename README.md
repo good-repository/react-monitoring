@@ -7,7 +7,7 @@ A flexible and plug-and-play logging system for React with support for **Sentry*
 ## 📦 Installation
 
 ```bash
-npm install react-monitoring @sentry/react @datadog/browser-rum
+npm install react-monitoring
 ```
 
 ---
