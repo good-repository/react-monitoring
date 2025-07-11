@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/good-repository/react-monitoring#readme",
   "dependencies": {
-    "@datadog/browser-rum": "^6.13.0",
+    "@datadog/browser-logs": "^6.13.0",
     "@sentry/react": "^9.37.0"
   }
 }
