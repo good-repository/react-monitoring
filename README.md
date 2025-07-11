@@ -8,7 +8,7 @@ A flexible and plug-and-play monitoring and logging solution for React, with nat
 ## 📦 Installation
 
 ```bash
-npm install react-monitoring @sentry/react @datadog/browser-logs
+npm install react-monitoring
 ```
 
 ---
@@ -22,7 +22,7 @@ monitor.init({
   provider: 'datadog',
   token: 'YOUR_CLIENT_TOKEN',
   env: 'production',
-  site: 'datadoghq.com', // Datadog sites autocomplete supported
+  site: 'datadoghq.com',
   service: 'my-frontend-service',
   errorBoundary: {
     fallback: <div>Oops! Something went wrong.</div>,
