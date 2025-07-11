@@ -1,8 +1,3 @@
-/*
-README.md
-*/
-
-/**
 # 🧩 React Monitoring & Logger
 
 A flexible and plug-and-play logging system for React with support for **Sentry**, **Datadog**, and custom services. Built to be simple, extensible, and production-ready.
