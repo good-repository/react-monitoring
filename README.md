@@ -1,176 +1,157 @@
+/*
+README.md
+*/
 
+/**
+# 🧩 React Monitoring & Logger
 
-# react-monitoring
-
-> **React Error Monitoring & Logging Toolkit**
-
-![npm](https://img.shields.io/npm/v/react-monitoring?style=flat-square)
-[![GitHub](https://img.shields.io/badge/github-repo-blue?logo=github&style=flat-square)](https://github.com/good-repository/react-monitoring)
-
-`react-monitoring` is a flexible toolkit for error monitoring and logging in React applications. It provides:
-
-- **Agnostic logging structure** for any backend (Datadog, Sentry, custom API, etc.)
-- **React Error Boundary** and HOC for UI error capture
-- **API call logging** (fetch, saga, axios, etc.)
-- **Microfrontend-ready**: no globals, logger injection everywhere
+A flexible and plug-and-play logging system for React with support for **Sentry**, **Datadog**, and custom services. Built to be simple, extensible, and production-ready.
 
 ---
 
-## Installation
+## 📦 Installation
 
-```sh
-npm install react-monitoring
+```bash
+npm install react-monitoring @sentry/react @datadog/browser-rum
 ```
 
 ---
 
+## 🚀 Quickstart
 
+```tsx
+import { monitor, logger, ErrorBoundary, withErrorBoundary } from 'react-monitoring';
 
-## Configuration
+monitor.init({
+  provider: 'sentry',
+  token: 'YOUR_SENTRY_DSN',
+  env: 'production',
+});
 
-### 1. Create a Logger
-
-#### Datadog Example
-```ts
-import { DatadogLogger } from 'react-monitoring/dist/datadogLogger';
-const logger = new DatadogLogger('YOUR_DATADOG_API_KEY');
-```
-
-#### Sentry Example
-```ts
-import * as Sentry from '@sentry/browser';
-import { Logger, LogEntry } from 'react-monitoring';
-
-export const logger: Logger = {
-  log(entry: LogEntry) {
-    Sentry.captureException(entry.error || entry.message, {
-      level: entry.level,
-      extra: entry.context,
-      tags: entry.tags?.reduce((acc, tag) => ({ ...acc, [tag]: true }), {}),
-    });
-  }
-};
-```
-
-#### Custom API Example
-```ts
-import { Logger, LogEntry } from 'react-monitoring';
-
-export const logger: Logger = {
-  log(entry: LogEntry) {
-    fetch('https://my-logging-api.com/log', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(entry),
-    });
-  }
-};
-```
-
----
-
-## Error Boundary & Component Logging
-
-### Log Any Event (from a component, saga, etc.)
-
-```ts
-logger.log({
-  level: 'error',
-  message: 'Something went wrong',
-  error: new Error('Oops'),
-  context: { userId: 123 },
-  tags: ['react', 'boundary'],
+logger.info({
+  message: 'User signed in',
+  tags: ['auth'],
 });
 ```
 
-### Use ErrorBoundary in React
+---
 
-```tsx
-import { ErrorBoundary } from 'react-monitoring';
+## 🔧 API Reference
 
-export default function App() {
-  return (
-    <ErrorBoundary
-      fallback={<div>Custom error message</div>}
-      logger={logger}
-      onError={(error, info, logger) => {
-        logger.log({
-          level: 'error',
-          message: 'Boundary error',
-          error,
-          context: info,
-        });
-      }}
-    >
-      <MyComponent />
-    </ErrorBoundary>
-  );
-}
-```
+### monitor.init(config)
+Initializes the monitoring provider.
 
-### withErrorBoundary
 ```ts
-withErrorBoundary(Component, errorBoundaryProps)
+monitor.init({
+  provider: 'sentry' | 'datadog' | 'custom',
+  token?: string,
+  env?: string,
+  customLoggerFn?: (entry: LogEntry) => void,
+});
 ```
-- `Component`: The component to wrap
-- `errorBoundaryProps`: Props for the error boundary (except `children`)
+
+#### Parameters:
+| Name             | Type                                      | Description                          |
+|------------------|-------------------------------------------|--------------------------------------|
+| `provider`       | `'sentry' | 'datadog' | 'custom'`         | Required. Which logger to use.       |
+| `token`          | `string`                                  | Token/DSN for Sentry or Datadog.     |
+| `env`            | `string`                                  | Optional environment name.           |
+| `customLoggerFn` | `(entry: LogEntry) => void`               | Required if `provider` is `custom`.  |
 
 ---
 
-## API HTTP Request Logging
-
-### Log API Calls (fetch)
+### logger.info / warn / error
+Unified interface for sending logs.
 
 ```ts
-import { createLoggedFetch } from 'react-monitoring';
-const myFetch = createLoggedFetch(logger);
-
-const response = await myFetch('/api/data');
-if (!response.ok) {
-  // handle error
-}
+logger.info({
+  message: 'User login successful',
+  tags: ['auth'],
+  customProperties: { userId: '123' },
+});
 ```
 
----
-
-## API Reference
-
-### Logger Interface
+#### LogEntry structure:
 ```ts
-interface Logger {
-  log(entry: LogEntry): void | Promise<void>;
-}
-```
-
-### LogEntry
-```ts
-type LogEntry = {
-  level: 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+{
   message: string;
-  error?: Error | string;
-  context?: Record<string, any>;
-  timestamp?: string; // ISO string
   tags?: string[];
-};
+  level?: 'info' | 'warn' | 'error'; // optional for manual construction
+  customProperties?: Record<string, any>;
+}
 ```
-
-### ErrorBoundary
-Props:
-- `fallback` (ReactNode): Custom fallback UI
-- `onError` (function): Callback when error is caught (receives error, info, and logger)
-- `logger` (Logger): Logger instance to use
-- `children` (ReactNode): Child components
-
-
-
-## Microfrontend & Advanced Usage
-
-- Each microfrontend or app can inject its own logger instance.
-- No global logger is required; all utilities accept a logger parameter or prop.
-- Enrich logs with microfrontend name, version, or user context as needed.
 
 ---
 
-## License
-MIT
+## 🧱 ErrorBoundary
+Catches React component errors and logs them automatically.
 
+### Usage
+```tsx
+<ErrorBoundary
+  fallback={<div>Something went wrong</div>}
+  logOptions={{
+    tags: ['page'],
+    message: 'Home page crash',
+    level: 'error',
+    customProperties: { userId: '123' },
+  }}
+>
+  <App />
+</ErrorBoundary>
+```
+
+#### Props:
+| Prop         | Type                                  | Description                             |
+|--------------|----------------------------------------|-----------------------------------------|
+| `fallback`   | `React.ReactNode`                      | Optional UI on error.                   |
+| `logOptions` | `Partial<LogEntry> & { message?: string }` | Logging metadata override.         |
+
+---
+
+## 🎯 withErrorBoundary HOC
+Wrap components with automatic error catching + logging.
+
+### Usage
+```tsx
+export default withErrorBoundary(MyComponent, {
+  tags: ['profile'],
+  message: 'Profile screen failed',
+  level: 'error',
+  customProperties: { context: 'profile-load' },
+});
+```
+
+### Signature
+```ts
+withErrorBoundary(
+  Component: React.ComponentType,
+  logOptions?: Partial<LogEntry> & { message?: string }
+): React.FC
+```
+
+---
+
+## 🧪 Testing
+Mock your `customLoggerFn` to assert log behavior:
+```ts
+monitor.init({
+  provider: 'custom',
+  customLoggerFn: jest.fn(),
+});
+```
+
+---
+
+## ✨ Features
+- ✅ Type-safe logging (TS/JS)
+- ✅ Built-in Sentry & Datadog integrations
+- ✅ Full support for custom backends
+- ✅ ErrorBoundary component and HOC
+- ✅ Auto-log level routing: info / warn / error
+
+---
+
+## 📄 License
+MIT
+*/
