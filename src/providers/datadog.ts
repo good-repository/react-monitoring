@@ -9,7 +9,7 @@ export const initDatadog = ({ token, env, site, service, trackErrors }: { token?
     service: service || 'frontend',
     env,
     sessionSampleRate: 100,
-    forwardErrorsToLogs: trackErrors || true,
+    forwardErrorsToLogs: trackErrors !== undefined ? trackErrors : true,
   });
 };
 
