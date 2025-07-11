@@ -1,5 +1,5 @@
 import { initSentry, sentryLogger } from './providers/sentry';
-import { initDatadog, datadogLogger } from './providers/datadog';
+import { initDatadog, datadogLogger, Site } from './providers/datadog';
 import { customLogger } from './providers/custom';
 import { logger } from './logger';
 
@@ -10,6 +10,9 @@ interface MonitorConfig {
   token?: string;
   env?: string;
   customLoggerFn?: (entry: LogEntry) => void;
+  trackErrors?: boolean;
+  site?: Site;
+  service?: string;
 }
 
 export interface LogEntry {
