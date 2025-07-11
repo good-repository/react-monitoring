@@ -6,7 +6,6 @@ interface Props {
   children: React.ReactNode;
   fallback?: React.ReactNode;
   logOptions?: Partial<LogEntry> & { message?: string };
-
 }
 
 export class ErrorBoundary extends React.Component<Props> {
