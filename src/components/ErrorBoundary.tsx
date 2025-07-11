@@ -1,6 +1,7 @@
 import React from 'react';
 import { logger } from '../logger';
 import { LogEntry } from '../monitor';
+import { monitor } from '../monitor';
 
 interface Props {
   children: React.ReactNode;
@@ -8,47 +9,40 @@ interface Props {
   logOptions?: Partial<LogEntry> & { message?: string };
 }
 
-export class ErrorBoundary extends React.Component<Props> {
+interface State {
+  hasError: boolean;
+}
+
+export class ErrorBoundary extends React.Component<Props, State> {
+  state: State = { hasError: false };
+
+  static getDerivedStateFromError(_: Error): State {
+    return { hasError: true };
+  }
+
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    switch (this.props.logOptions?.level) {
-      case 'warn':
-        logger.warn({
-          message: this.props.logOptions?.message || error.message,
-          tags: this.props.logOptions?.tags || ['error-boundary'],
-          customProperties: {
-            stack: error.stack,
-            componentStack: info.componentStack,
-            ...this.props.logOptions?.customProperties,
-          },
-        });
-        break;
-      case 'info':
-        logger.info({
-          message: this.props.logOptions?.message || error.message,
-          tags: this.props.logOptions?.tags || ['error-boundary'],
-          customProperties: {
-            stack: error.stack,
-            componentStack: info.componentStack,
-            ...this.props.logOptions?.customProperties,
-          },
-        });
-        break;
-      case 'error':
-      default:
-        logger.error({
-          message: this.props.logOptions?.message || error.message,
-          tags: this.props.logOptions?.tags || ['error-boundary'],
-          customProperties: {
-            stack: error.stack,
-            componentStack: info.componentStack,
-            ...this.props.logOptions?.customProperties,
-          },
-        });
-        break;
-    }
+    const globalOpts = monitor.getErrorBoundaryDefaults();
+    const logOptions = { ...globalOpts.logOptions, ...this.props.logOptions };
+
+    const logEntry: LogEntry = {
+      message: this.props.logOptions?.message || globalOpts.logOptions?.message || error.message,
+      tags: logOptions?.tags || ['error-boundary'],
+      level: logOptions?.level || 'error',
+      customProperties: {
+        stack: error.stack,
+        componentStack: info.componentStack,
+        ...logOptions?.customProperties,
+      },
+    };
+
+    logger[logEntry.level](logEntry);
   }
 
   render() {
-    return this.props.fallback || this.props.children;
+    const globalFallback = monitor.getErrorBoundaryDefaults().fallback;
+    if (this.state.hasError) {
+      return this.props.fallback ?? globalFallback ?? null;
+    }
+    return this.props.children;
   }
 }

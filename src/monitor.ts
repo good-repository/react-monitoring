@@ -5,14 +5,18 @@ import { logger } from './logger';
 
 export type Provider = 'sentry' | 'datadog' | 'custom';
 
-interface MonitorConfig {
+interface BaseConfig {
   provider: Provider;
   token?: string;
   env?: string;
-  customLoggerFn?: (entry: LogEntry) => void;
-  trackErrors?: boolean;
-  site?: Site;
   service?: string;
+  site?: string;
+  trackErrors?: boolean;
+  customLoggerFn?: (entry: LogEntry) => void;
+  errorBoundary?: {
+    fallback?: React.ReactNode;
+    logOptions?: Partial<LogEntry> & { message?: string };
+  };
 }
 
 export interface LogEntry {
@@ -22,8 +26,29 @@ export interface LogEntry {
   customProperties?: Record<string, any>;
 }
 
+interface DatadogConfig extends BaseConfig {
+  provider: 'datadog';
+  site?: Site;
+}
+
+interface SentryConfig extends BaseConfig {
+  provider: 'sentry';
+}
+
+interface CustomConfig extends BaseConfig {
+  provider: 'custom';
+  customLoggerFn: (entry: LogEntry) => void;
+}
+
+export type MonitorInitConfig = DatadogConfig | SentryConfig | CustomConfig;
+
+let globalErrorBoundaryOptions: {
+  fallback?: React.ReactNode;
+  logOptions?: Partial<LogEntry> & { message?: string };
+} = {};
+
 export const monitor = {
-  init(config: MonitorConfig) {
+  init(config: MonitorInitConfig) {
     switch (config.provider) {
       case 'sentry':
         initSentry(config);
@@ -38,5 +63,11 @@ export const monitor = {
         logger.setHandler((entry) => customLogger(config.customLoggerFn!, entry));
         break;
     }
-  }
+
+    globalErrorBoundaryOptions = config.errorBoundary || {};
+  },
+
+  getErrorBoundaryDefaults() {
+    return globalErrorBoundaryOptions;
+  },
 };

@@ -1,13 +1,14 @@
+
 # 🧩 React Monitoring & Logger
 
-A flexible and plug-and-play logging system for React with support for **Sentry**, **Datadog**, and custom services. Built to be simple, extensible, and production-ready.
+A flexible and plug-and-play monitoring and logging solution for React, with native support for **Sentry**, **Datadog**, and custom services.
 
 ---
 
 ## 📦 Installation
 
 ```bash
-npm install react-monitoring
+npm install react-monitoring @sentry/react @datadog/browser-logs
 ```
 
 ---
@@ -18,117 +19,154 @@ npm install react-monitoring
 import { monitor, logger, ErrorBoundary, withErrorBoundary } from 'react-monitoring';
 
 monitor.init({
-  provider: 'sentry',
-  token: 'YOUR_SENTRY_DSN',
+  provider: 'datadog',
+  token: 'YOUR_CLIENT_TOKEN',
   env: 'production',
+  site: 'datadoghq.com', // Datadog sites autocomplete supported
+  service: 'my-frontend-service',
+  errorBoundary: {
+    fallback: <div>Oops! Something went wrong.</div>,
+    logOptions: {
+      level: 'error',
+      tags: ['global-error'],
+      message: 'Global error captured',
+    },
+  },
 });
 
 logger.info({
-  message: 'User signed in',
+  message: 'User logged in successfully',
   tags: ['auth'],
 });
 ```
 
 ---
 
-## 🔧 API Reference
+## 🔧 API
 
-### monitor.init(config)
-Initializes the monitoring provider.
+### monitor.init(config: MonitorInitConfig)
+
+Initializes the monitoring system.
 
 ```ts
-monitor.init({
-  provider: 'sentry' | 'datadog' | 'custom',
-  token?: string,
-  env?: string,
-  customLoggerFn?: (entry: LogEntry) => void,
-});
-```
+type Site =
+  | 'datadoghq.com'
+  | 'us3.datadoghq.com'
+  | 'us5.datadoghq.com'
+  | 'datadoghq.eu'
+  | 'ddog-gov.com'
+  | 'ap1.datadoghq.com';
 
-#### Parameters:
-| Name             | Type                                      | Description                          |
-|------------------|-------------------------------------------|--------------------------------------|
-| `provider`       | `'sentry' | 'datadog' | 'custom'`         | Required. Which logger to use.       |
-| `token`          | `string`                                  | Token/DSN for Sentry or Datadog.     |
-| `env`            | `string`                                  | Optional environment name.           |
-| `customLoggerFn` | `(entry: LogEntry) => void`               | Required if `provider` is `custom`.  |
+interface BaseConfig {
+  token?: string;
+  env?: string;
+  service?: string;
+  trackErrors?: boolean;
+  customLoggerFn?: (entry: LogEntry) => void;
+  errorBoundary?: {
+    fallback?: React.ReactNode;
+    logOptions?: Partial<LogEntry> & { message?: string };
+  };
+}
+
+interface DatadogConfig extends BaseConfig {
+  provider: 'datadog';
+  site?: Site;
+}
+
+interface SentryConfig extends BaseConfig {
+  provider: 'sentry';
+}
+
+interface CustomConfig extends BaseConfig {
+  provider: 'custom';
+  customLoggerFn: (entry: LogEntry) => void;
+}
+
+type MonitorInitConfig = DatadogConfig | SentryConfig | CustomConfig;
+```
 
 ---
 
-### logger.info / warn / error
+### logger.info / warn / error(entry: LogEntry)
+
 Unified interface for sending logs.
 
 ```ts
-logger.info({
-  message: 'User login successful',
-  tags: ['auth'],
-  customProperties: { userId: '123' },
-});
-```
-
-#### LogEntry structure:
-```ts
-{
+interface LogEntry {
   message: string;
   tags?: string[];
-  level?: 'info' | 'warn' | 'error'; // optional for manual construction
+  level: 'info' | 'warn' | 'error';
   customProperties?: Record<string, any>;
 }
 ```
 
+Example:
+
+```tsx
+logger.error({
+  message: 'Form submission error',
+  tags: ['form', 'validation'],
+  customProperties: { field: 'email' },
+});
+```
+
 ---
 
-## 🧱 ErrorBoundary
-Catches React component errors and logs them automatically.
+## 🧱 Error Components
 
-### Usage
+### ErrorBoundary
+
+Catches React errors and logs them automatically.
+
 ```tsx
 <ErrorBoundary
-  fallback={<div>Something went wrong</div>}
+  fallback={<div>Oops, something went wrong!</div>}
   logOptions={{
-    tags: ['page'],
-    message: 'Home page crash',
     level: 'error',
-    customProperties: { userId: '123' },
+    tags: ['page-error'],
+    message: 'Error on the homepage',
   }}
 >
   <App />
 </ErrorBoundary>
 ```
 
-#### Props:
-| Prop         | Type                                  | Description                             |
-|--------------|----------------------------------------|-----------------------------------------|
-| `fallback`   | `React.ReactNode`                      | Optional UI on error.                   |
-| `logOptions` | `Partial<LogEntry> & { message?: string }` | Logging metadata override.         |
+If `fallback` or `logOptions` are not provided, global defaults set in `monitor.init()` will be used.
 
 ---
 
-## 🎯 withErrorBoundary HOC
+### withErrorBoundary HOC
+
 Wrap components with automatic error catching + logging.
 
-### Usage
 ```tsx
 export default withErrorBoundary(MyComponent, {
-  tags: ['profile'],
-  message: 'Profile screen failed',
   level: 'error',
-  customProperties: { context: 'profile-load' },
+  tags: ['profile'],
+  message: 'Profile loading failed',
 });
 ```
 
-### Signature
-```ts
-withErrorBoundary(
-  Component: React.ComponentType,
-  logOptions?: Partial<LogEntry> & { message?: string }
-): React.FC
-```
+Also uses global fallback and log options if not specified.
+
+---
+
+## ✨ Features
+
+- Discriminated typing for `monitor.init` with autocomplete and safety.
+- Global fallback UI and error log options configuration.
+- Native support for Sentry and Datadog.
+- Support for custom loggers.
+- Easy integration with `ErrorBoundary` and `withErrorBoundary`.
+- Logging levels: `info`, `warn`, `error`.
 
 ---
 
 ## 🧪 Testing
-Mock your `customLoggerFn` to assert log behavior:
+
+Easily mock your custom logger:
+
 ```ts
 monitor.init({
   provider: 'custom',
@@ -138,15 +176,6 @@ monitor.init({
 
 ---
 
-## ✨ Features
-- ✅ Type-safe logging (TS/JS)
-- ✅ Built-in Sentry & Datadog integrations
-- ✅ Full support for custom backends
-- ✅ ErrorBoundary component and HOC
-- ✅ Auto-log level routing: info / warn / error
-
----
-
 ## 📄 License
-MIT
 
+MIT
