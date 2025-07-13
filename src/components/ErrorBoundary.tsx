@@ -1,6 +1,6 @@
 import React from 'react';
 import { logger } from '../logger';
-import { LogEntry } from '../monitor';
+import { globalErrorBoundaryOptions, LogEntry } from '../monitor';
 import { monitor } from '../monitor';
 
 interface Props {
@@ -21,7 +21,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    const globalOpts = monitor.getErrorBoundaryDefaults();
+    const globalOpts = globalErrorBoundaryOptions;
     const logOptions = { ...globalOpts.logOptions, ...this.props.logOptions };
 
     const logEntry: LogEntry = {
@@ -43,7 +43,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   render() {
-    const globalFallback = monitor.getErrorBoundaryDefaults().fallback;
+    const globalFallback = globalErrorBoundaryOptions.fallback;
     if (this.state.hasError) {
       return this.props.fallback ?? globalFallback ?? null;
     }

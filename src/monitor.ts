@@ -41,7 +41,7 @@ interface CustomConfig extends BaseConfig {
 
 export type MonitorInitConfig = DatadogConfig | SentryConfig | CustomConfig;
 
-let globalErrorBoundaryOptions: {
+export let globalErrorBoundaryOptions: {
   fallback?: React.ReactNode;
   logOptions?: Partial<LogEntry> & { message?: string };
 } = {};
@@ -64,9 +64,5 @@ export const monitor = {
     }
 
     globalErrorBoundaryOptions = config.errorBoundary || {};
-  },
-
-  getErrorBoundaryDefaults() {
-    return globalErrorBoundaryOptions;
   },
 };
