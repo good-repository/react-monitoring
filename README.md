@@ -29,15 +29,7 @@ monitor.init({
   provider: 'datadog',
   token: 'YOUR_CLIENT_TOKEN',
   env: 'production',
-  site: 'datadoghq.com',
   service: 'my-frontend-service',
-  errorBoundary: {
-    fallback: <div>Oops! Something went wrong.</div>,
-    logOptions: {
-      level: 'error',
-      message: 'Global error captured',
-    },
-  },
 });
 
 logger.info({
