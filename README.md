@@ -3,7 +3,9 @@
 
 A flexible, plug-and-play monitoring and logging library for React applications.
 
-Track errors and logs effortlessly with native support for **Datadog** and custom providers.  (WIP: **Sentry** and  **LogRocket**, if need some specific, open an Issue)
+Track errors and logs effortlessly with native support for **Datadog** and custom providers.  
+WIP: **Sentry** and  **LogRocket**, if need some specific, open an Issue
+
 Improve your frontend observability and debugging with minimal setup.
 
 Perfect for React developers who want robust error tracking and logging out of the box.
