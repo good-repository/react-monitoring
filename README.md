@@ -3,7 +3,7 @@
 
 A flexible, plug-and-play monitoring and logging library for React applications.
 
-Track errors and logs effortlessly with native support for **Sentry**, **Datadog**, and custom providers.  
+Track errors and logs effortlessly with native support for **Datadog** and custom providers.  (WIP: **Sentry** and  **LogRocket**, if need some specific, open an Issue)
 Improve your frontend observability and debugging with minimal setup.
 
 Perfect for React developers who want robust error tracking and logging out of the box.
@@ -155,7 +155,7 @@ Also uses global fallback and log options if not specified.
 
 - Easy setup with full TypeScript support and autocomplete.
 - Global fallback UI and error log options.
-- Native integrations with **Sentry** and **Datadog**.
+- Native integrations with **Datadog**.
 - Support for custom logging providers.
 - React-friendly error capturing with `ErrorBoundary` and `withErrorBoundary`.
 - Logging levels: `info`, `warn`, and `error`.
@@ -183,4 +183,4 @@ MIT
 
 ## 🔍 Keywords
 
-React, monitoring, logging, error tracking, frontend observability, Sentry, Datadog, error boundary, React hooks, TypeScript
+React, monitoring, logging, error tracking, frontend observability, Sentry, Datadog, LogRocket, error boundary, React hooks, TypeScript
