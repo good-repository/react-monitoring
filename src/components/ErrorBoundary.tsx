@@ -32,6 +32,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
         error: {
           name: error.name,
           message: error.message,
+          stack: error.stack,
         },
         componentStack: info.componentStack,
         ...logOptions?.logProperties,
