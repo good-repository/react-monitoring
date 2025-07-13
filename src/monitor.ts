@@ -19,11 +19,16 @@ interface BaseConfig {
   };
 }
 
+interface Error {
+  name: string;
+  message: string;
+  stack?: string;
+}
 export interface LogEntry {
   message: string;
-  tags?: string[];
   level: 'info' | 'warn' | 'error';
   customProperties?: Record<string, any>;
+  error?: Error;
 }
 
 interface DatadogConfig extends BaseConfig {

@@ -14,9 +14,5 @@ export const initDatadog = ({ token, env, site, service, trackErrors }: { token?
 };
 
 export const datadogLogger = (entry: LogEntry) => {
-  datadogLogs.logger[entry.level](entry.message, {
-    ddtags: entry.tags?.join(',') || '',
-    ...entry.customProperties,
-    level: entry.level,
-  });
+  datadogLogs.logger[entry.level](entry.message, entry.customProperties, entry.error);
 };

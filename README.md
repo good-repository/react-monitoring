@@ -28,7 +28,6 @@ monitor.init({
     fallback: <div>Oops! Something went wrong.</div>,
     logOptions: {
       level: 'error',
-      tags: ['global-error'],
       message: 'Global error captured',
     },
   },
@@ -36,7 +35,6 @@ monitor.init({
 
 logger.info({
   message: 'User logged in successfully',
-  tags: ['auth'],
 });
 ```
 
@@ -95,9 +93,9 @@ Unified interface for sending logs.
 ```ts
 interface LogEntry {
   message: string;
-  tags?: string[];
   level: 'info' | 'warn' | 'error';
   customProperties?: Record<string, any>;
+  error: Error
 }
 ```
 
@@ -106,7 +104,6 @@ Example:
 ```tsx
 logger.error({
   message: 'Form submission error',
-  tags: ['form', 'validation'],
   customProperties: { field: 'email' },
 });
 ```
@@ -124,7 +121,6 @@ Catches React errors and logs them automatically.
   fallback={<div>Oops, something went wrong!</div>}
   logOptions={{
     level: 'error',
-    tags: ['page-error'],
     message: 'Error on the homepage',
   }}
 >
@@ -143,7 +139,6 @@ Wrap components with automatic error catching + logging.
 ```tsx
 export default withErrorBoundary(MyComponent, {
   level: 'error',
-  tags: ['profile'],
   message: 'Profile loading failed',
 });
 ```
