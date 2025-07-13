@@ -1,7 +1,12 @@
 
 # 🧩 React Monitoring & Logger
 
-A flexible and plug-and-play monitoring and logging solution for React, with native support for **Sentry**, **Datadog**, and custom services.
+A flexible, plug-and-play monitoring and logging library for React applications.
+
+Track errors and logs effortlessly with native support for **Sentry**, **Datadog**, and custom providers.  
+Improve your frontend observability and debugging with minimal setup.
+
+Perfect for React developers who want robust error tracking and logging out of the box.
 
 ---
 
@@ -113,7 +118,7 @@ logger.error({
 
 ### ErrorBoundary
 
-Catches React errors and logs them automatically.
+Catch React errors and log them automatically.
 
 ```tsx
 <ErrorBoundary
@@ -148,18 +153,18 @@ Also uses global fallback and log options if not specified.
 
 ## ✨ Features
 
-- Discriminated typing for `monitor.init` with autocomplete and safety.
-- Global fallback UI and error log options configuration.
-- Native support for Sentry and Datadog.
-- Support for custom loggers.
-- Easy integration with `ErrorBoundary` and `withErrorBoundary`.
-- Logging levels: `info`, `warn`, `error`.
+- Easy setup with full TypeScript support and autocomplete.
+- Global fallback UI and error log options.
+- Native integrations with **Sentry** and **Datadog**.
+- Support for custom logging providers.
+- React-friendly error capturing with `ErrorBoundary` and `withErrorBoundary`.
+- Logging levels: `info`, `warn`, and `error`.
 
 ---
 
 ## 🧪 Testing
 
-Easily mock your custom logger:
+Easily mock your custom logger for unit tests:
 
 ```ts
 monitor.init({
@@ -173,3 +178,9 @@ monitor.init({
 ## 📄 License
 
 MIT
+
+---
+
+## 🔍 Keywords
+
+React, monitoring, logging, error tracking, frontend observability, Sentry, Datadog, error boundary, React hooks, TypeScript
