@@ -8,7 +8,7 @@ export type Provider = 'sentry' | 'datadog' | 'custom';
 interface BaseConfig {
   provider: Provider;
   token?: string;
-  env?: string;
+  environment?: string;
   service?: string;
   site?: string;
   trackErrors?: boolean;

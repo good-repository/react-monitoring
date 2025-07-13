@@ -1,8 +1,8 @@
 import * as Sentry from '@sentry/react';
 import { LogEntry } from '../monitor';
 
-export const initSentry = ({ token, env }: { token?: string; env?: string }) => {
-  Sentry.init({ dsn: token, environment: env });
+export const initSentry = ({ token, environment }: { token?: string; environment?: string }) => {
+  Sentry.init({ dsn: token, environment });
 };
 
 type SeverityLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';

@@ -28,7 +28,7 @@ import { monitor, logger, ErrorBoundary, withErrorBoundary } from 'react-monitor
 monitor.init({
   provider: 'datadog',
   token: 'YOUR_CLIENT_TOKEN',
-  env: 'production',
+  environment: 'production',
   service: 'my-frontend-service',
 });
 
@@ -56,7 +56,7 @@ type Site =
 
 interface BaseConfig {
   token?: string;
-  env?: string;
+  environment?: string;
   service?: string;
   trackErrors?: boolean;
   customLoggerFn?: (entry: LogEntry) => void;
