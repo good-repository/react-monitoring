@@ -94,8 +94,7 @@ Unified interface for sending logs.
 interface LogEntry {
   message: string;
   level: 'info' | 'warn' | 'error';
-  customProperties?: Record<string, any>;
-  error: Error
+  logProperties?: Record<string, any>;
 }
 ```
 
@@ -104,7 +103,7 @@ Example:
 ```tsx
 logger.error({
   message: 'Form submission error',
-  customProperties: { field: 'email' },
+  logProperties: { field: 'email' },
 });
 ```
 

@@ -17,7 +17,7 @@ export class ErrorBoundary extends React.Component<Props> {
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     logger.error({
       message: error.message,
-      customProperties: {
+      logProperties: {
         stack: error.stack,
         componentStack: info.componentStack,
       },

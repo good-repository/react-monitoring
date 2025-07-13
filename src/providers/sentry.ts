@@ -10,6 +10,6 @@ type SeverityLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
 export const sentryLogger = (entry: LogEntry) => {
   Sentry.captureMessage(entry.message, {
     level: entry.level as SeverityLevel,
-    extra: entry.customProperties,
+    extra: entry.logProperties,
   });
 };

@@ -27,14 +27,14 @@ export class ErrorBoundary extends React.Component<Props, State> {
     const logEntry: LogEntry = {
       message: this.props.logOptions?.message || globalOpts.logOptions?.message || error.message,
       level: logOptions?.level || 'error',
-      customProperties: {
-        componentStack: info.componentStack,
-        ...logOptions?.customProperties,
-      },
-      error: {
-        name: error.name,
-        message: error.message,
+      logProperties: {
         stack: error.stack,
+        error: {
+          name: error.name,
+          message: error.message,
+        },
+        componentStack: info.componentStack,
+        ...logOptions?.logProperties,
       },
     };
 
