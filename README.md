@@ -143,6 +143,10 @@ monitor.init({
 
 ---
 
+Need an example? [Here](https://github.com/good-repository/poc-react-monitoring)
+
+---
+
 ## 📄 License
 
 MIT
