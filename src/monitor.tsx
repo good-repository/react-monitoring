@@ -1,9 +1,15 @@
+import React from 'react';
 import { initSentry, sentryLogger } from './providers/sentry';
 import { initDatadog, datadogLogger, Site } from './providers/datadog';
 import { customLogger } from './providers/custom';
 import { logger } from './logger';
 
 export type Provider = 'sentry' | 'datadog' | 'custom';
+
+type ErrorBoundaryDefaultValues = {
+  fallback?: React.ReactNode;
+  logOptions?: Partial<LogEntry> & { message?: string };
+};
 
 interface BaseConfig {
   provider: Provider;
@@ -13,10 +19,7 @@ interface BaseConfig {
   site?: string;
   trackErrors?: boolean;
   customLoggerFn?: (entry: LogEntry) => void;
-  errorBoundary?: {
-    fallback?: React.ReactNode;
-    logOptions?: Partial<LogEntry> & { message?: string };
-  };
+  errorBoundaryDefaultValues?: ErrorBoundaryDefaultValues;
 }
 
 export interface LogEntry {
@@ -46,6 +49,15 @@ export let globalErrorBoundaryOptions: {
   logOptions?: Partial<LogEntry> & { message?: string };
 } = {};
 
+const defaultErrorBoundaryOptions: ErrorBoundaryDefaultValues = {
+  fallback: <div>Something went wrong.</div>,
+  logOptions: {
+    level: "error",
+    message: "An error occurred in the application",
+    logProperties: {},
+  },
+};
+
 export const monitor = {
   init(config: MonitorInitConfig) {
     switch (config.provider) {
@@ -63,6 +75,6 @@ export const monitor = {
         break;
     }
 
-    globalErrorBoundaryOptions = config.errorBoundary || {};
+    globalErrorBoundaryOptions = config.errorBoundaryDefaultValues || defaultErrorBoundaryOptions;
   },
 };

@@ -4,7 +4,6 @@ export const customLogger = (fn: (entry: LogEntry) => void, entry: LogEntry) => 
   fn(entry);
 };
 
-// components/ErrorBoundary.tsx
 import React from 'react';
 import { logger } from '../logger';
 

@@ -3,10 +3,9 @@
 
 A flexible, plug-and-play monitoring and logging library for React applications.
 
-Track errors and logs effortlessly with native support for **Datadog** and custom providers.  
-WIP: **Sentry** and  **LogRocket**, if need some specific, open an Issue
-
-Improve your frontend observability and debugging with minimal setup.
+Easily track logs and runtime errors with native support for **Datadog** and custom providers.  
+Coming soon: **Sentry** and **LogRocket** support.  
+Need a specific provider? [Open an issue](https://github.com/good-repository/react-monitoring/issues).
 
 Perfect for React developers who want robust error tracking and logging out of the box.
 
@@ -45,54 +44,26 @@ logger.info({
 
 Initializes the monitoring system.
 
-```ts
-type Site =
-  | 'datadoghq.com'
-  | 'us3.datadoghq.com'
-  | 'us5.datadoghq.com'
-  | 'datadoghq.eu'
-  | 'ddog-gov.com'
-  | 'ap1.datadoghq.com';
-
-interface BaseConfig {
-  token?: string;
-  environment?: string;
-  service?: string;
-  trackErrors?: boolean;
-  customLoggerFn?: (entry: LogEntry) => void;
-  errorBoundary?: {
-    fallback?: React.ReactNode;
-    logOptions?: Partial<LogEntry> & { message?: string };
-  };
-}
-
-interface DatadogConfig extends BaseConfig {
-  provider: 'datadog';
-  site?: Site;
-}
-
-interface SentryConfig extends BaseConfig {
-  provider: 'sentry';
-}
-
-interface CustomConfig extends BaseConfig {
-  provider: 'custom';
-  customLoggerFn: (entry: LogEntry) => void;
-}
-
-type MonitorInitConfig = DatadogConfig | SentryConfig | CustomConfig;
-```
+| Property                  | Type                              | Description                                         | Required                         | Default                        |
+|---------------------------|-----------------------------------|-----------------------------------------------------|----------------------------------|--------------------------------|
+| `provider`                | `"datadog"` \ `"custom"`         | Monitoring provider                                 | ✅ Yes                            | —                              |
+| `token`                   | `string`                          | Provider API token                                  | ✅ Yes                            | —                              |
+| `environment`             | `string`                          | Environment name (e.g., production, staging)        | 🔶 Recommended                    | `"production"`                 |
+| `service`                 | `string`                          | Logical name of the service                         | 🔶 Recommended                    | `"frontend"`                   |
+| `site`                    | `string`                          | Provider site domain (Datadog only)                 | 🔶 Recommended (Datadog only)     | Based on provider              |
+| `trackErrors`             | `boolean`                         | Automatically forward runtime errors                | ❌ Optional                       | `false`                        |
+| `customLoggerFn`          | `(entry: LogEntry) => void`       | Required if using `custom` provider                 | ✅ Yes (for `custom`)             | —                              |
+| `errorBoundaryDefaultValues` | `{ fallback?: React.ReactNode, logOptions?: Partial<LogEntry> & { message?: string } }` | Default fallback UI and log settings for errors | ❌ Optional                       | `<div>Something went wrong.</div>`,<br> `{ level: "error", message: "An error occurred in the application", logProperties: {}, }` |
 
 ---
 
-### logger.info / warn / error(entry: LogEntry)
+### logger.info / logger.warn / logger.error
 
 Unified interface for sending logs.
 
 ```ts
 interface LogEntry {
   message: string;
-  level: 'info' | 'warn' | 'error';
   logProperties?: Record<string, any>;
 }
 ```
@@ -112,7 +83,9 @@ logger.error({
 
 ### ErrorBoundary
 
-Catch React errors and log them automatically.
+New to Error Boundaries? [Read the official React docs](https://reactjs.org/docs/error-boundaries.html)
+
+Wraps part of your app to automatically catch and log render-time errors.
 
 ```tsx
 <ErrorBoundary
@@ -126,7 +99,8 @@ Catch React errors and log them automatically.
 </ErrorBoundary>
 ```
 
-If `fallback` or `logOptions` are not provided, global defaults set in `monitor.init()` will be used.
+- `fallback`: React node to render when an error is caught.
+- `logOptions`: Optional log config. Defaults come from `monitor.init()`.
 
 ---
 
