@@ -13,9 +13,10 @@ export const initDatadog = ({ token, environment, site, service, trackErrors }: 
   });
 };
 
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'critical';
+
 export const datadogLogger = (entry: LogEntry) => {
-  datadogLogs.logger[entry.level](entry.message, {
+  datadogLogs.logger[entry.level as LogLevel](entry.message, {
     ...entry.logProperties,
-    level: entry.level,
   });
 };
