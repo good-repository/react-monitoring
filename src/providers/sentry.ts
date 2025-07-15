@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react';
 import { LogEntry } from '../monitor';
 
-export const initSentry = ({ token, environment }: { token?: string; environment?: string }) => {
+export const initSentry = ({ token, environment }: { token: string; environment?: string }) => {
   Sentry.init({
     dsn: token,
     environment,

@@ -5,7 +5,7 @@ import { customLogger } from './providers/custom';
 import { logger } from './logger';
 import { initLogRocket, logRocketLogger } from './providers/logrocket';
 
-export type Provider = 'sentry' | 'datadog' | 'log_rocket' | 'custom';
+export type Provider = 'sentry' | 'datadog' | 'logRocket' | 'custom';
 
 type ErrorBoundaryDefaultValues = {
   fallback?: React.ReactNode;
@@ -14,7 +14,7 @@ type ErrorBoundaryDefaultValues = {
 
 interface BaseConfig {
   provider: Provider;
-  token?: string;
+  token: string;
   environment?: string;
   service?: string;
   site?: string;
@@ -39,7 +39,7 @@ interface SentryConfig extends BaseConfig {
 }
 
 interface LogRocketConfig extends BaseConfig {
-  provider: 'log_rocket';
+  provider: 'logRocket';
 }
 
 interface CustomConfig extends BaseConfig {
@@ -74,12 +74,10 @@ export const monitor = {
         initDatadog(config);
         logger.setHandler(datadogLogger);
         break;
-      case 'log_rocket':
-        initLogRocket({
-          token: config.token!,
-          environment: config.environment,
-        });
+      case 'logRocket':
+        initLogRocket(config);
         logger.setHandler(logRocketLogger);
+        break;
       case 'custom':
         if (!config.customLoggerFn) throw new Error('Custom logger function required');
         logger.setHandler((entry) => customLogger(config.customLoggerFn!, entry));
