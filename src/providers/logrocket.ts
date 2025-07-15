@@ -1,6 +1,6 @@
 import LogRocket from 'logrocket';
 
-const initLogRocket = ({ token, environment }: { token: string; environment?: string }) => {
+export const initLogRocket = ({ token, environment }: { token: string; environment?: string }) => {
   LogRocket.init(token, {
     release: environment,
   });
@@ -8,7 +8,7 @@ const initLogRocket = ({ token, environment }: { token: string; environment?: st
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'critical';
 
-export const logrocketLogger = (entry: { level: LogLevel; message: string; logProperties?: Record<string, any> }) => {
+export const logRocketLogger = (entry: { level: LogLevel; message: string; logProperties?: Record<string, any> }) => {
   LogRocket.log(entry.message, {
     ...entry.logProperties,
     level: entry.level,
