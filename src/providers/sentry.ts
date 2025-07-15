@@ -10,12 +10,11 @@ export const initSentry = ({ token, environment }: { token: string; environment?
   });
 };
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
-
-const { logger } = Sentry;
+type LogLevel = 'debug' | 'info' | 'warning' | 'error' | 'fatal';
 
 export const sentryLogger = (entry: LogEntry) => {
-  logger[entry.level as LogLevel](entry.message, {
-    ...entry.logProperties,
+  Sentry.captureMessage(entry.message, {
+    level: entry.level as LogLevel,
+    extra: entry.logProperties,
   });
 };
