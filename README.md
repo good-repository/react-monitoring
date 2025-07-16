@@ -46,7 +46,7 @@ Initializes the monitoring system.
 
 | Property                  | Type                              | Description                                         | Required                         | Default                        |
 |---------------------------|-----------------------------------|-----------------------------------------------------|----------------------------------|--------------------------------|
-| `provider`                | `"datadog"` \ `"sentry"` \  `"logrocket"` \   `"custom"`       | Monitoring provider                                 | ✅ Yes                            | —                              |
+| `provider`                | `"datadog"` <br> `"sentry"` <br>  `"logrocket"` <br>   `"custom"`       | Monitoring provider                                 | ✅ Yes                            | —                              |
 | `token`                   | `string`                          | Provider API token                                  | ✅ Yes                            | —                              |
 | `environment`             | `string`                          | Environment name (e.g., production, staging)        | 🔶 Recommended                    | `"production"`                 |
 | `service`                 | `string`                          | Logical name of the service                         | 🔶 Recommended                    | `"frontend"`                   |
